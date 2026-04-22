@@ -1,10 +1,10 @@
 export const siteIdentity = {
   code: process.env.NEXT_PUBLIC_SITE_CODE || '9olx86igmw',
-  name: process.env.NEXT_PUBLIC_SITE_NAME || 'P Rnews 18',
-  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE || 'Independent media updates',
+  name: process.env.NEXT_PUBLIC_SITE_NAME || 'PRnews18.com',
+  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE || 'Press release distribution and media visibility platform',
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
-    'A simple newsroom-style publication for announcements, coverage, and media updates on P Rnews 18.',
+    'PRnews18.com helps teams publish press releases, distribute media stories, and build trusted news visibility with fast publishing workflows.',
   domain: process.env.NEXT_PUBLIC_SITE_DOMAIN || 'prnews18.com',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://prnews18.com',
   ogImage: process.env.NEXT_PUBLIC_SITE_OG_IMAGE || '/og-default.png',
@@ -13,5 +13,5 @@ export const siteIdentity = {
 
 export const defaultAuthorProfile = {
   name: siteIdentity.name,
-  avatar: '/placeholder.svg?height=80&width=80',
+  avatar: '/freepic/default-cover.jpg',
 } as const
