@@ -9,7 +9,7 @@ import { SITE_CONFIG, type TaskConfig } from "@/lib/site-config";
 import { siteContent } from "@/config/site.content";
 import { SITE_THEME } from "@/config/site.theme";
 
-const FALLBACK_IMAGE = "/placeholder.svg?height=1400&width=2400";
+const FALLBACK_IMAGE = "/freepic/home-hero.jpg";
 
 const heroClasses = {
   'search-first': {
