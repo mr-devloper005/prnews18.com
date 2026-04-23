@@ -5,64 +5,130 @@ import { Footer } from '@/components/shared/footer'
 import { fetchTaskPostBySlug, fetchTaskPosts } from '@/lib/task-data'
 import type { TaskKey } from '@/lib/site-config'
 import { formatRichHtml, RichContent } from '@/components/shared/rich-content'
+import { ContentImage } from '@/components/shared/content-image'
+import { Facebook, Linkedin, Share2, Twitter } from 'lucide-react'
 
 export const TASK_DETAIL_PAGE_OVERRIDE_ENABLED = true
 
 export async function TaskDetailPageOverride({ slug }: { task: TaskKey; slug: string }) {
   const post = await fetchTaskPostBySlug('mediaDistribution', slug)
   if (!post) notFound()
-  const recent = (await fetchTaskPosts('mediaDistribution', 8, { fresh: true })).filter((item) => item.slug !== slug).slice(0, 5)
+  const recent = (await fetchTaskPosts('mediaDistribution', 8, { fresh: true })).filter((item) => item.slug !== slug).slice(0, 3)
   const content = (post.content || {}) as Record<string, unknown>
   const html = formatRichHtml((content.body as string) || post.summary || '', 'Post body will appear here.')
+  const image =
+    (Array.isArray(post.media) && post.media.find((item) => typeof item?.url === 'string' && item.url)?.url) ||
+    (Array.isArray((post.content as Record<string, unknown>)?.images) && ((post.content as Record<string, unknown>).images as string[])[0]) ||
+    '/freepic/press-release.jpg'
+  const subtitle =
+    (typeof content.excerpt === 'string' && content.excerpt) ||
+    (typeof content.description === 'string' && content.description) ||
+    post.summary ||
+    'Latest media distribution update from the PRnews18 newsroom.'
+  const releaseUrl = `/updates/${post.slug}`
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
+    <div className="min-h-screen bg-[#fffaf4] text-[#251308]">
       <NavbarShell />
-      <section className="bg-neutral-900 py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4 text-center sm:px-6">
-          <h1 className="mx-auto max-w-5xl text-4xl font-black uppercase leading-tight tracking-[0.02em] sm:text-5xl">{post.title}</h1>
-          <div className="mt-5 flex items-center justify-center gap-3 text-sm text-neutral-300">
-            <Link href="/">Home</Link>
+      <section className="border-b border-[#f1a661]/20 bg-[linear-gradient(180deg,#fff6ea_0%,#fffaf4_100%)] py-12">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+          <div className="text-xs font-semibold uppercase tracking-[0.23em] text-[#9a5b22]">Press Release</div>
+          <h1 className="mt-3 text-4xl font-bold leading-tight tracking-[-0.04em] sm:text-5xl">{post.title}</h1>
+          <p className="mt-4 text-base leading-8 text-[#6f4018]">{subtitle}</p>
+          <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-[#875028]">
+            <span className="rounded-full bg-[#ffe3bf] px-3 py-1 font-semibold">
+              {new Date(post.publishedAt || Date.now()).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            </span>
+            <span>By {post.authorName || 'PRnews18 Editorial Desk'}</span>
+            <span className="rounded-full border border-[#f1a661]/35 px-3 py-1">
+              {String((content.category as string) || 'Media Update')}
+            </span>
+          </div>
+          <div className="mt-4 flex items-center gap-2 text-sm">
+            <Link href="/" className="text-[#9a5b22] hover:text-[#e38b29]">
+              Home
+            </Link>
             <span>›</span>
-            <span className="truncate">{post.title}</span>
+            <Link href="/updates" className="text-[#9a5b22] hover:text-[#e38b29]">
+              Latest News
+            </Link>
+            <span>›</span>
+            <span className="truncate text-[#875028]">{post.title}</span>
           </div>
         </div>
       </section>
-      <main className="mx-auto grid max-w-6xl gap-12 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_280px]">
-        <article>
-          <div className="border border-[#f0dfd7] bg-[#faece7] px-6 py-5 text-sm text-neutral-600">
-            <span className="mr-3 inline-block bg-neutral-800 px-3 py-1 text-white">{new Date(post.publishedAt || Date.now()).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-            <span>by {post.authorName || 'Editorial Desk'}</span>
-          </div>
-          <div className="prose prose-lg mt-10 max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-[0.01em]">
-            <RichContent html={html} />
-          </div>
-          <div className="mt-12 grid gap-0 border border-neutral-200 md:grid-cols-2">
-            {recent.slice(0,2).map((item, index) => (
-              <Link key={item.id} href={`/updates/${item.slug}`} className="border-neutral-200 p-6 first:border-b md:first:border-b-0 md:first:border-r">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">{index === 0 ? 'Previous Post' : 'Next Post'}</p>
-                <p className="mt-3 text-lg leading-8 text-neutral-700">{item.title}</p>
+      <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
+          <article className="rounded-[2rem] border border-[#f1a661]/25 bg-white p-5 shadow-[0_24px_50px_rgba(209,132,63,0.14)] sm:p-8">
+            <div className="overflow-hidden rounded-[1.2rem] border border-[#f1a661]/20">
+              <ContentImage src={String(image)} alt={`${post.title} featured image`} width={1400} height={820} className="h-auto w-full object-cover" />
+            </div>
+
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <span className="text-sm font-semibold text-[#9a5b22]">Share:</span>
+              <Link href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(releaseUrl)}&text=${encodeURIComponent(post.title)}`} target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#f1a661]/35 text-[#9a5b22] hover:bg-[#fff2df]">
+                <Twitter className="h-4 w-4" />
+              </Link>
+              <Link href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(releaseUrl)}`} target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#f1a661]/35 text-[#9a5b22] hover:bg-[#fff2df]">
+                <Facebook className="h-4 w-4" />
+              </Link>
+              <Link href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(releaseUrl)}&title=${encodeURIComponent(post.title)}`} target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#f1a661]/35 text-[#9a5b22] hover:bg-[#fff2df]">
+                <Linkedin className="h-4 w-4" />
+              </Link>
+              <Link href={releaseUrl} className="inline-flex h-9 items-center gap-2 rounded-full border border-[#f1a661]/35 px-4 text-sm font-semibold text-[#9a5b22] hover:bg-[#fff2df]">
+                <Share2 className="h-4 w-4" />
+                Release URL
+              </Link>
+            </div>
+
+            <div className="article-content prose prose-lg mt-8 max-w-none prose-headings:text-[#2b170a] prose-p:text-[#5f3514] prose-li:text-[#5f3514]">
+              <RichContent html={html} />
+            </div>
+          </article>
+
+          <aside className="space-y-5">
+            <section className="rounded-[1.6rem] border border-[#f1a661]/25 bg-white p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9a5b22]">Need wider distribution?</p>
+              <h2 className="mt-2 text-xl font-semibold">Upgrade your release reach.</h2>
+              <p className="mt-2 text-sm leading-7 text-[#6f4018]">
+                Compare plans and unlock stronger media visibility, analytics depth, and priority support.
+              </p>
+              <Link href="/press" className="mt-4 inline-flex rounded-full bg-[#e38b29] px-4 py-2 text-sm font-semibold text-white hover:bg-[#cc7417]">
+                View Pricing
+              </Link>
+            </section>
+
+            <section className="rounded-[1.6rem] border border-[#f1a661]/25 bg-white p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9a5b22]">Related Releases</p>
+              <div className="mt-3 space-y-4">
+                {recent.map((item) => (
+                  <Link key={item.id} href={`/updates/${item.slug}`} className="block rounded-xl border border-[#f1a661]/20 p-3 transition hover:bg-[#fff6ea]">
+                    <p className="text-sm font-semibold leading-6 text-[#321b0b]">{item.title}</p>
+                    <p className="mt-1 text-xs text-[#8d5220]">
+                      {new Date(item.publishedAt || Date.now()).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          </aside>
+        </div>
+
+        <section className="mt-10 rounded-[1.8rem] border border-[#f1a661]/25 bg-white p-6">
+          <h2 className="text-2xl font-semibold">More from PRnews18 newsroom</h2>
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            {recent.map((item) => (
+              <Link key={`related-${item.id}`} href={`/updates/${item.slug}`} className="rounded-[1.2rem] border border-[#f1a661]/25 bg-[#fff8ef] p-4 transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(209,132,63,0.16)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9a5b22]">Related</p>
+                <h3 className="mt-2 text-lg font-semibold leading-tight">{item.title}</h3>
               </Link>
             ))}
           </div>
-        </article>
-        <aside className="space-y-6">
-          <div className="border border-neutral-200 p-6">
-            <div className="flex items-center gap-0">
-              <input className="h-12 flex-1 border border-neutral-200 px-4 text-sm outline-none" placeholder="Type here to search" />
-              <button className="flex h-12 w-12 items-center justify-center bg-neutral-800 text-white">Q</button>
-            </div>
-          </div>
-          <div className="border border-neutral-200 p-6">
-            <div className="space-y-5">
-              {recent.map((item) => (
-                <Link key={item.id} href={`/updates/${item.slug}`} className="block border-b border-neutral-200 pb-5 last:border-b-0 last:pb-0">
-                  <p className="text-base leading-7 text-neutral-700">{item.title}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </aside>
+        </section>
       </main>
       <Footer />
     </div>
