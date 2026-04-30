@@ -1,7 +1,7 @@
 export const siteIdentity = {
   code: process.env.NEXT_PUBLIC_SITE_CODE || '9olx86igmw',
   name: process.env.NEXT_PUBLIC_SITE_NAME || 'PRnews18.com',
-  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE || 'Press release distribution and media visibility platform',
+  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE || 'MEDIA PRESS RELEASE PLATFORM',
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
     'PRnews18.com helps teams publish press releases, distribute media stories, and build trusted news visibility with fast publishing workflows.',
