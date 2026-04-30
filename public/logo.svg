@@ -1,0 +1,14 @@
+<svg width="200" height="48" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Orange circle with megaphone icon -->
+  <circle cx="24" cy="24" r="20" fill="#e38b29"/>
+  <!-- Megaphone icon -->
+  <path d="M18 18 L30 22 L30 26 L18 30 Z" fill="white"/>
+  <path d="M15 18 Q12 21 12 24 Q12 27 15 30" fill="none" stroke="white" stroke-width="2"/>
+  <path d="M30 22 L33 20 L33 28 L30 26" fill="white"/>
+  
+  <!-- PRnews18.com text -->
+  <text x="50" y="28" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1a1a1a">PRnews18.com</text>
+  
+  <!-- MEDIA PRESS RELEASE PLATFORM tagline -->
+  <text x="50" y="40" font-family="Arial, sans-serif" font-size="8" fill="#666666">MEDIA PRESS RELEASE PLATFORM</text>
+</svg>
